@@ -30,7 +30,7 @@ var timeParse = function(inputTime) {
 
 var splashWindow = new UI.Window();
 var text = new UI.Text({
-    position: new Vector2(0, 100),
+    position: new Vector2(0, 95),
     size: new Vector2(144, 168),
     text:'LOADING',
     font:'GOTHIC_28_BOLD',
@@ -85,7 +85,7 @@ ajax(
         var names = data2.match(/<stpnm>(.*?)<\/stpnm>/g);
         var routes = data2.match(/<stpid>(.*?)<\/stpid>/g);
         for(var i = 0; i < names.length && i < routes.length; i++) {    
-            var title = names[i].replace("<stpnm>", "").replace("</stpnm>", "");
+            var title = names[i].replace("<stpnm>", "").replace("</stpnm>", "").replace("&amp;", "&");
             var route = routes[i].replace("<stpid>", "").replace("</stpid>", "");
             
             // Add to menu items array
