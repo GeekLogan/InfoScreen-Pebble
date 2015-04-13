@@ -2,17 +2,16 @@ var UI = require('ui');
 var ajax = require('ajax');
 var Vector2 = require('vector2');
 
-var parseFeed = function(data, quantity) {
+var parseFeed = function(data) {
   var items = [];
-  for(var i = 0; i < quantity; i++) {
-    // Always upper case the description string
-    var title = data.list[i].weather[0].main;
-    title = title.charAt(0).toUpperCase() + title.substring(1);
 
-    // Get date/time substring
-    var time = data.list[i].dt_txt;
-    time = time.substring(time.indexOf('-') + 1, time.indexOf(':') + 3);
+  for(var i = 0; i < data.prediction.predictionUnit.length; i++) {    
+    var title = data.prediction.predictionUnit[i].route;
+    var time = data.prediction.predictionUnit[i].time;
 
+      
+      console.log(title);
+      console.log(time);
     // Add to menu items array
     items.push({
       title:title,
@@ -31,7 +30,7 @@ var splashWindow = new UI.Window();
 var text = new UI.Text({
   position: new Vector2(0, 0),
   size: new Vector2(144, 168),
-  text:'Downloading weather data...',
+  text:'LOADING',
   font:'GOTHIC_28_BOLD',
   color:'black',
   textOverflow:'wrap',
@@ -46,17 +45,17 @@ splashWindow.show();
 // Make request to openweathermap.org
 ajax(
   {
-    url:'http://api.openweathermap.org/data/2.5/forecast?q=London',
+    url:'http://theloganwalker.com/info/dev.php',
     type:'json'
   },
   function(data) {
     // Create an array of Menu items
-    var menuItems = parseFeed(data, 10);
+    var menuItems = parseFeed(data);
 
     // Construct Menu to show to user
     var resultsMenu = new UI.Menu({
       sections: [{
-        title: 'Current Forecast',
+        title: 'Current Busses',
         items: menuItems
       }]
     });
