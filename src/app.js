@@ -3,56 +3,47 @@ var ajax = require('ajax');
 var Vector2 = require('vector2');
 
 var parseFeed = function(data) {
-  var items = [];
+    var items = [];
+    var times = data.match(/<prdtm>(.*?)<\/prdtm>/);
+    var routes = data.match(/<rt>(.*?)<\/rt>/);
+    
+    for(var i = 0; i < times.length && i < routes.length; i++) {    
+        var title = routes[i].replace("<rt>", "").replace("</rt>", "");
+        var time = times[i].replace("<prdtm>", "").replace("</prdtm>", "");
 
-  for(var i = 0; i < data.prediction.predictionUnit.length; i++) {    
-    var title = data.prediction.predictionUnit[i].route;
-    var time = data.prediction.predictionUnit[i].time;
-
-      
-      console.log(title);
-      console.log(time);
-    // Add to menu items array
-    items.push({
-      title:title,
-      subtitle:time
-    });
+        // Add to menu items array
+        items.push({
+          title:title,
+          subtitle:time
+        });
   }
-
-  // Finally return whole array
   return items;
 };
 
-// Show splash screen while waiting for data
 var splashWindow = new UI.Window();
-
-// Text element to inform user
 var text = new UI.Text({
-  position: new Vector2(0, 0),
-  size: new Vector2(144, 168),
-  text:'LOADING',
-  font:'GOTHIC_28_BOLD',
-  color:'black',
-  textOverflow:'wrap',
-  textAlign:'center',
+    position: new Vector2(0, 0),
+    size: new Vector2(144, 168),
+    text:'LOADING',
+    font:'GOTHIC_28_BOLD',
+    color:'black',
+    textOverflow:'wrap',
+    textAlign:'center',
 	backgroundColor:'white'
 });
-
-// Add to splashWindow and show
 splashWindow.add(text);
 splashWindow.show();
 
-// Make request to openweathermap.org
+var key = "scxhtGA7yzXPerqpsi8aQYXF2";
+
 ajax(
   {
-    url:'http://theloganwalker.com/info/dev.php',
-    type:'json'
+    url:'http://trip.osu.edu/bustime/api/v1/getpredictions?key=' + key + "&stpid=44",
+    type:'text'
   },
   function(data) {
-    // Create an array of Menu items
     var menuItems = parseFeed(data);
 
-    // Construct Menu to show to user
     var resultsMenu = new UI.Menu({
       sections: [{
         title: 'Current Busses',
@@ -60,7 +51,6 @@ ajax(
       }]
     });
 
-    // Show the Menu, hide the splash
     resultsMenu.show();
     splashWindow.hide();
   },
