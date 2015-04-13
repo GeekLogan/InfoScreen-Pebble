@@ -3,8 +3,29 @@ var ajax = require('ajax');
 var Vector2 = require('vector2');
 
 var timeParse = function(inputTime) {
+    var year = inputTime.substring(0,4);
+    var month = inputTime.substring(4,6);
+    var day = inputTime.substring(6,8);
+    var hour = inputTime.substring(9,11);
+    var minute = inputTime.substring(12,14);
     
-    return inputTime;
+    var prediction = new Date(year, month, day, hour, minute);
+    prediction.setMonth(prediction.getMonth() - 1);
+    
+    var one_minute = 60000; //the value of one minute in milliseconds
+    var currentTimeMillis = (new Date()).getTime();
+    var predictionTimeMillis = prediction.getTime();
+    
+    var timeDiff = predictionTimeMillis - currentTimeMillis;
+    if(timeDiff < 0) timeDiff = 0;
+    timeDiff /= one_minute;
+    timeDiff = Math.round(timeDiff);
+    
+    if(timeDiff <= 1) {
+        return " Arriving Now";  
+    }
+    
+    return " " + timeDiff + " Minutes";
 };
 
 var splashWindow = new UI.Window();
@@ -52,8 +73,6 @@ ajax(
         });
         
         routesMenu.on('select', function(e) {
-            console.log('Selected item #' + e.itemIndex + ' of section #' + e.sectionIndex);
-            console.log('The item is titled "' + e.item.title + '"');
 
 //START LAYER 2
 ajax(
@@ -84,8 +103,6 @@ ajax(
         });
         
         stopsMenu.on('select', function(c) {
-            console.log('Selected item #' + c.itemIndex + ' of section #' + c.sectionIndex);
-            console.log('The item is titled "' + c.item.title + '"');
             
 //START LAYER 3
             
