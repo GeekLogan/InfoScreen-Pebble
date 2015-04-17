@@ -42,7 +42,7 @@ var text = new UI.Text({
 splashWindow.add(text);
 splashWindow.show();
 
-var key = "scxhtGA7yzXPerqpsi8aQYXF2";
+var key = "";
 
 ajax(
     {
